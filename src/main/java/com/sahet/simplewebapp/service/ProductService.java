@@ -1,33 +1,45 @@
 package com.sahet.simplewebapp.service;
 
 import com.sahet.simplewebapp.model.Product;
+import com.sahet.simplewebapp.repository.ProductRepo;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Getter
 @Service
 public class ProductService {
+//    INJECTION
+    private final ProductRepo productRepo;
+    public ProductService(ProductRepo productRepo) {
+        this.productRepo = productRepo;
+    }
+// //////////
 
-    List<Product> products = new ArrayList<>( Arrays.asList(
-            new Product(1, "iPhone", 1200),
-            new Product(2, "Camera Wwowo", 800),
-            new Product(3, "Charger", 30)));
 
-    public List<Product> products(){
-        return products;
+
+
+
+    public List<Product> getProducts() {
+        return productRepo.findAll();
     }
 
+
     public Product getProductById(int prodId){
-        return products.stream()
-                .filter(p -> p.getProdId() == prodId)
-                .findFirst().get();
+        return productRepo.findById(prodId).orElse(null);
     }
 
     public void addProduct(Product prod){
-        products.add(prod);
+        productRepo.save(prod);
+    }
+
+    public void updateProduct(Product prod) {
+        productRepo.save(prod);
+    }
+
+    public void deleteProductById(int prodId) {
+        productRepo.deleteById(prodId);
+
     }
 }

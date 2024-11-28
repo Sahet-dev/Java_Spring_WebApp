@@ -1,26 +1,31 @@
 package com.sahet.simplewebapp.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.*;
 
-@Setter
-@Getter
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
+@Entity
+@NoArgsConstructor
 public class Product {
-    private int prodId;
-    private String prodName;
-    private int price;
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "prodId=" + prodId +
-                ", prodName='" + prodName + '\'' +
-                ", price=" + price +
-                '}';
-    }
+    @Id
+    private int id;
+    private String name;
+    private String desc;
+    private String brand;
+    private BigDecimal price;
+    private String category;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private Date releaseDate;
+    private boolean available;
+    private int quantity;
+
 }
 
