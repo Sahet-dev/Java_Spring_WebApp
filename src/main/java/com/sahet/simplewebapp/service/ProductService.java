@@ -4,7 +4,9 @@ import com.sahet.simplewebapp.model.Product;
 import com.sahet.simplewebapp.repository.ProductRepo;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Getter
@@ -30,8 +32,11 @@ public class ProductService {
         return productRepo.findById(prodId).orElse(null);
     }
 
-    public void addProduct(Product prod){
-        productRepo.save(prod);
+    public Product addProduct(Product product, MultipartFile imageFile) throws IOException {
+        product.setImageName(imageFile.getOriginalFilename());
+        product.setImageType(imageFile.getContentType());
+        product.setImageDate(imageFile.getBytes());
+        return productRepo.save(product);
     }
 
     public void updateProduct(Product prod) {
