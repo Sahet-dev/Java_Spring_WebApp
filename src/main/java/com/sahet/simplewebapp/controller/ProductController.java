@@ -69,38 +69,40 @@ public class ProductController {
     @PutMapping("/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart Product product,
                                            @RequestPart MultipartFile imageFile){
-        Product product1 = productService.updateProduct(id, product, imageFile);
+        Product product1 = null;
+        try{
+            product1 = productService.updateProduct(id, product, imageFile);
+        } catch (Exception e){
+            return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
+        }
         if (product1 != null) {
             return new ResponseEntity<>("Product Updated", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
         }
-
-
-
-        byte[] imageFile = product.getImageDate();
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(product.getImageType()))
-                .body(imageFile);
     }
 
 
 
-
-
-
-
-
-    @PutMapping("/products")
-    public void updateProduct(@RequestBody Product prod){
-        System.out.println(prod);
-        productService.updateProduct(prod);
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id){
+        Product product = productService.getProductById(id);
+        if (product != null) {
+            productService.deleteProductById(id);
+            return new ResponseEntity<>("Product Deleted", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to delete", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @DeleteMapping("/products/{prodId}")
-    public void deleteProductById(@PathVariable int prodId){
-        productService.deleteProductById(prodId);
+
+    @GetMapping("/product/search")
+    public ResponseEntity<List<Product>> searchProduct(@RequestParam("keyword") String keyword){
+        System.out.println("Searching with " + keyword);
+        List<Product> products = productService.searchProducts(keyword);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+
 
 }
