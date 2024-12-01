@@ -3,6 +3,7 @@ package com.sahet.simplewebapp.controller;
 import com.sahet.simplewebapp.model.Product;
 import com.sahet.simplewebapp.service.ProductService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,10 +55,35 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/products/{productId}/image")
+    public ResponseEntity<?> getProductImageById(@PathVariable int productId){
+        Product product = productService.getProductById(productId);
+        byte[] imageFile = product.getImageDate();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(product.getImageType()))
+                .body(imageFile);
+    }
+
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart Product product,
+                                           @RequestPart MultipartFile imageFile){
+        Product product1 = productService.updateProduct(id, product, imageFile);
+        if (product1 != null) {
+            return new ResponseEntity<>("Product Updated", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
+        }
 
 
 
+        byte[] imageFile = product.getImageDate();
 
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(product.getImageType()))
+                .body(imageFile);
+    }
 
 
 

@@ -39,8 +39,11 @@ public class ProductService {
         return productRepo.save(product);
     }
 
-    public void updateProduct(Product prod) {
-        productRepo.save(prod);
+    public Product updateProduct(int id, Product product, MultipartFile imageFile) throws IOException {
+        product.setImageDate(imageFile.getBytes());
+        product.setImageName(imageFile.getOriginalFilename());
+        product.setImageType(imageFile.getContentType());
+        return productRepo.save(product);
     }
 
     public void deleteProductById(int prodId) {
