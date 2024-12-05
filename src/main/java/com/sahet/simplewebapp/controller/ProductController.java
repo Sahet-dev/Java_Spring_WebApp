@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api")
 public class ProductController {
 
@@ -69,13 +69,13 @@ public class ProductController {
     @PutMapping("/products/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable int id, @RequestPart Product product,
                                            @RequestPart MultipartFile imageFile){
-        Product product1 = null;
+        Product product2 = null;
         try{
-            product1 = productService.updateProduct(id, product, imageFile);
+            product2 = productService.updateProduct(id, product, imageFile);
         } catch (Exception e){
             return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
         }
-        if (product1 != null) {
+        if (product2 != null) {
             return new ResponseEntity<>("Product Updated", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Failed to update", HttpStatus.BAD_REQUEST);
